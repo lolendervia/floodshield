@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FloodShield Pro – Automatic Flood Protection for Basement Windows</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&amp;family=Merriweather:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════
+   DESIGN SYSTEM  –  hochwasserschutz.info
+   inspired: clean white, trust-blue, red CTA
+═══════════════════════════════════════ */
+:root {
+  --blue:      #0056A6;
+  --blue-dark: #003E7E;
+  --blue-mid:  #1A6DC7;
+  --blue-light:#EBF4FF;
+  --red:       #C0392B;
+  --red-dark:  #962d22;
+  --grey-bg:   #F4F6F8;
+  --grey-mid:  #E0E6ED;
+  --grey-line: #D1D9E0;
+  --text:      #1A2733;
+  --muted:     #5A6B7A;
+  --white:     #FFFFFF;
+  color-scheme: light;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Open Sans', sans-serif; background: var(--white); color: var(--text); line-height: 1.65; -webkit-font-smoothing: antialiased; }
+
+/* ── TOPBAR ── */
+.topbar { background: var(--blue-dark); color: rgba(255,255,255,.8); font-size:.8rem; padding:.4rem clamp(1rem,5vw,4rem); display:flex; justify-content:space-between; align-items:center; }
+.topbar a { color: rgba(255,255,255,.8); text-decoration:none; }
+.topbar a:hover { color:#fff; }
+
+/* ── NAV ── */
+nav {
+  position: sticky; top: 0; z-index: 300;
+  background: var(--white);
+  border-bottom: 3px solid var(--blue);
+  box-shadow: 0 2px 12px rgba(0,0,0,.08);
+}
+.nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 clamp(1rem,4vw,3rem); display:flex; align-items:center; justify-content:space-between; height:66px; }
+.nav-logo { font-family:'Open Sans',sans-serif; font-weight:800; font-size:1.15rem; color:var(--blue); text-decoration:none; display:flex; align-items:center; gap:.5rem; letter-spacing:-.01em; }
+.nav-logo .shield { font-size:1.4rem; }
+.nav-links { display:flex; gap:0; list-style:none; }
+.nav-links a { color:var(--text); text-decoration:none; font-size:.875rem; font-weight:600; padding:.5rem 1rem; transition:color .2s; display:block; }
+.nav-links a:hover { color:var(--blue); }
+.nav-cta-btn { background:var(--red); color:var(--white)!important; padding:.5rem 1.25rem!important; border-radius:3px; font-weight:700!important; transition:background .2s!important; }
+.nav-cta-btn:hover { background:var(--red-dark)!important; }
+
+/* ── PAGE SYSTEM ── */
+.page { display:none; }
+.page.active { display:block; }
+
+/* ── HERO ── */
+.hero { background: linear-gradient(135deg, var(--blue-dark) 0%, #0068C8 100%); color:#fff; }
+.hero-inner { max-width:1200px; margin:0 auto; padding:clamp(3rem,6vw,5rem) clamp(1rem,4vw,3rem); display:grid; grid-template-columns:1fr 1fr; gap:3rem; align-items:center; }
+.hero-badge { display:inline-flex; align-items:center; gap:.5rem; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.25); font-size:.75rem; font-weight:700; letter-spacing:.08em; padding:.35rem .875rem; border-radius:2px; margin-bottom:1.5rem; text-transform:uppercase; color:rgba(255,255,255,.9); }
+.hero-badge .dot { width:7px; height:7px; border-radius:50%; background:#4ADE80; flex-shrink:0; box-shadow:0 0 0 0 rgba(74,222,128,.4); animation:blink 2s infinite; }
+@keyframes blink { 0%,100%{box-shadow:0 0 0 0 rgba(74,222,128,.4);} 50%{box-shadow:0 0 0 7px rgba(74,222,128,0);} }
+.hero h1 { font-family:'Merriweather',serif; font-size:clamp(1.75rem,3.5vw,2.6rem); font-weight:700; line-height:1.2; color:#fff; margin-bottom:1.25rem; }
+.hero h1 strong { color:#7EC8F5; }
+.hero-sub { font-size:1rem; color:rgba(255,255,255,.8); line-height:1.75; max-width:46ch; margin-bottom:2rem; }
+.hero-actions { display:flex; gap:.875rem; flex-wrap:wrap; margin-bottom:2.5rem; }
+.btn-red { background:var(--red); color:#fff; font-weight:700; font-size:.9375rem; padding:.8rem 2rem; border:none; border-radius:3px; cursor:pointer; text-decoration:none; display:inline-block; transition:background .2s,transform .15s; letter-spacing:.01em; }
+.btn-red:hover { background:var(--red-dark); transform:translateY(-1px); }
+.btn-white-outline { border:2px solid rgba(255,255,255,.5); color:#fff; font-weight:600; font-size:.875rem; padding:.8rem 1.75rem; border-radius:3px; cursor:pointer; text-decoration:none; display:inline-block; transition:border-color .2s; background:none; }
+.btn-white-outline:hover { border-color:#fff; }
+.hero-checklist { display:flex; flex-direction:column; gap:.5rem; }
+.hero-check { display:flex; align-items:center; gap:.625rem; font-size:.9rem; color:rgba(255,255,255,.85); }
+.hero-check::before { content:'✓'; color:#4ADE80; font-weight:800; font-size:1rem; flex-shrink:0; }
+
+/* ── REVEAL SLIDER ── */
+.hero-visual { position:relative; }
+.reveal-container {
+  position:relative; border-radius:6px; overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,0,0,.4), 0 0 0 1px rgba(255,255,255,.1);
+  user-select:none; cursor:ew-resize;
+}
+.reveal-img { display:block; width:100%; height:auto; pointer-events:none; }
+.reveal-after {
+  position:absolute; inset:0; overflow:hidden;
+  clip-path:inset(0 50% 0 0);
+  transition:clip-path .04s linear;
+}
+.reveal-divider {
+  position:absolute; top:0; bottom:0; left:50%; width:2px;
+  background:rgba(255,255,255,.9); z-index:3; pointer-events:none;
+  box-shadow:0 0 10px rgba(255,255,255,.5);
+  transition:left .04s linear;
+}
+.reveal-handle {
+  position:absolute; top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  width:44px; height:44px; border-radius:50%;
+  background:#fff; z-index:4;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 4px 16px rgba(0,0,0,.35);
+  transition:left .04s linear;
+}
+.reveal-handle svg { width:22px; height:22px; fill:var(--blue); }
+.reveal-labels {
+  position:absolute; bottom:0; left:0; right:0; z-index:5;
+  display:flex; justify-content:space-between; padding:.75rem 1rem;
+  background:linear-gradient(to top, rgba(0,0,0,.7), transparent);
+  pointer-events:none;
+}
+.reveal-lbl { font-size:.7rem; font-weight:700; letter-spacing:.05em; color:rgba(255,255,255,.85); text-transform:uppercase; }
+.reveal-lbl.right { color:#4ADE80; }
+.reveal-hint {
+  position:absolute; top:1rem; left:50%; transform:translateX(-50%);
+  background:rgba(0,0,0,.55); backdrop-filter:blur(4px);
+  color:rgba(255,255,255,.85); font-size:.7rem; font-weight:600;
+  padding:.3rem .875rem; border-radius:100px; white-space:nowrap; z-index:6;
+  pointer-events:none; transition:opacity .4s;
+}
+
+/* ── TRUST STRIP ── */
+.trust-strip { background:var(--grey-bg); border-bottom:1px solid var(--grey-line); }
+.trust-inner { max-width:1200px; margin:0 auto; padding:1.25rem clamp(1rem,4vw,3rem); display:flex; gap:2.5rem; flex-wrap:wrap; justify-content:center; align-items:center; }
+.trust-item { display:flex; align-items:center; gap:.5rem; font-size:.8125rem; font-weight:600; color:var(--muted); }
+.trust-item svg { width:16px; height:16px; fill:var(--blue); flex-shrink:0; }
+
+/* ── WRAPPER ── */
+.section-wrap { max-width:1200px; margin:0 auto; padding:clamp(3.5rem,7vw,5.5rem) clamp(1rem,4vw,3rem); }
+
+/* ── SECTION LABEL ── */
+.s-tag { display:inline-block; background:var(--blue-light); color:var(--blue); font-size:.75rem; font-weight:700; letter-spacing:.06em; padding:.25rem .75rem; border-radius:2px; margin-bottom:.875rem; text-transform:uppercase; }
+h2.section-title { font-family:'Merriweather',serif; font-size:clamp(1.6rem,3vw,2.25rem); font-weight:700; color:var(--text); line-height:1.25; margin-bottom:.875rem; }
+.section-lead { font-size:1rem; color:var(--muted); line-height:1.75; max-width:56ch; margin-bottom:3rem; }
+
+/* ── BLUE DIVIDER ── */
+.blue-divider { height:4px; background:linear-gradient(to right, var(--blue), var(--blue-mid)); border:none; }
+
+/* ── HOW IT WORKS (numbered) ── */
+.hiw-section { background:var(--white); }
+.hiw-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:0; border:1px solid var(--grey-line); border-radius:4px; overflow:hidden; }
+.hiw-step { padding:1.75rem 1.5rem; border-right:1px solid var(--grey-line); position:relative; }
+.hiw-step:last-child { border-right:none; }
+.hiw-step::after { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--blue); transform:scaleX(0); transform-origin:left; transition:transform .3s; }
+.hiw-step:hover::after { transform:scaleX(1); }
+.hiw-num { font-family:'Merriweather',serif; font-size:2.5rem; font-weight:700; color:var(--grey-mid); line-height:1; margin-bottom:1rem; }
+.hiw-icon { font-size:1.75rem; margin-bottom:.75rem; display:block; }
+.hiw-title { font-weight:700; font-size:.9375rem; color:var(--text); margin-bottom:.5rem; }
+.hiw-desc { font-size:.8375rem; color:var(--muted); line-height:1.65; }
+
+/* ── INFOGRAPHIC SECTION ── */
+.infographic-section { background:var(--grey-bg); }
+.infographic-wrap {
+  border:1px solid var(--grey-line); border-radius:4px; overflow:hidden;
+  box-shadow:0 4px 24px rgba(0,0,0,.07);
+}
+.infographic-header { background:var(--blue); color:#fff; padding:1rem 1.5rem; display:flex; align-items:center; justify-content:space-between; }
+.infographic-header h3 { font-family:'Merriweather',serif; font-weight:700; font-size:1.1rem; }
+.infographic-sub { font-size:.8rem; color:rgba(255,255,255,.75); }
+.infographic-img { display:block; width:100%; height:auto; }
+.infographic-caption { background:var(--white); padding:1rem 1.5rem; display:flex; gap:2rem; flex-wrap:wrap; }
+.info-cap-item { display:flex; align-items:center; gap:.5rem; font-size:.8125rem; color:var(--muted); font-weight:600; }
+.info-cap-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+
+/* ── VIDEO SECTION ── */
+.video-section { background:var(--white); }
+.video-grid { display:grid; grid-template-columns:1fr 1fr; gap:2rem; align-items:start; }
+.video-box {
+  background:var(--blue-dark); border-radius:6px; overflow:hidden;
+  position:relative; cursor:pointer;
+  box-shadow:0 8px 32px rgba(0,0,0,.2);
+}
+.video-box video { display:block; width:100%; height:auto; }
+.video-placeholder {
+  background:linear-gradient(135deg,#0A2240,#0068C8);
+  aspect-ratio:16/9; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:.875rem;
+  color:#fff;
+}
+.play-btn-big { width:64px; height:64px; border-radius:50%; background:rgba(255,255,255,.15); border:3px solid rgba(255,255,255,.5); display:flex; align-items:center; justify-content:center; transition:background .2s; }
+.video-box:hover .play-btn-big { background:rgba(255,255,255,.25); }
+.play-btn-big svg { width:28px; height:28px; fill:#fff; margin-left:4px; }
+.video-label { font-weight:700; font-size:.875rem; }
+.video-sub { font-size:.75rem; color:rgba(255,255,255,.65); }
+.video-content h3 { font-family:'Merriweather',serif; font-size:1.375rem; font-weight:700; color:var(--text); margin-bottom:1rem; }
+.video-content p { font-size:.9rem; color:var(--muted); line-height:1.75; margin-bottom:1.25rem; }
+.video-checklist { display:flex; flex-direction:column; gap:.625rem; }
+.vc-item { display:flex; gap:.625rem; align-items:flex-start; font-size:.875rem; color:var(--text); }
+.vc-icon { color:var(--blue); font-weight:800; font-size:1rem; flex-shrink:0; margin-top:.05rem; }
+
+/* ── FEATURES ── */
+.features-section { background:var(--grey-bg); }
+.feat-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; }
+.feat-card { background:var(--white); border:1px solid var(--grey-line); border-top:3px solid var(--blue); border-radius:0 0 4px 4px; padding:1.5rem; transition:box-shadow .2s; }
+.feat-card:hover { box-shadow:0 6px 24px rgba(0,86,166,.1); }
+.feat-icon { font-size:2rem; margin-bottom:1rem; display:block; }
+.feat-title { font-weight:700; font-size:.9375rem; color:var(--text); margin-bottom:.5rem; }
+.feat-desc { font-size:.8375rem; color:var(--muted); line-height:1.65; }
+
+/* ── SIZES ── */
+.sizes-section { background:var(--white); }
+.sizes-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; }
+.size-card { border:1px solid var(--grey-line); border-radius:4px; overflow:hidden; transition:border-color .2s, box-shadow .2s; }
+.size-card:hover { border-color:var(--blue); box-shadow:0 6px 24px rgba(0,86,166,.1); }
+.size-card-header { padding:1.25rem 1.5rem; background:var(--grey-bg); border-bottom:1px solid var(--grey-line); }
+.size-label { font-size:.7rem; font-weight:700; letter-spacing:.06em; color:var(--blue); text-transform:uppercase; margin-bottom:.25rem; }
+.size-name { font-family:'Merriweather',serif; font-size:1.25rem; font-weight:700; color:var(--text); }
+.size-dims { font-size:.8rem; color:var(--muted); margin-top:.25rem; font-weight:600; }
+.size-card-body { padding:1.25rem 1.5rem; }
+.size-visual { height:60px; display:flex; align-items:flex-end; gap:4px; margin-bottom:1rem; }
+.size-bar { border-radius:2px 2px 0 0; flex:1; background:linear-gradient(to top,var(--blue-dark),var(--blue-mid)); opacity:.7; }
+.size-desc { font-size:.8375rem; color:var(--muted); line-height:1.6; }
+
+/* ── SMART HOME ── */
+.smart-section { background:var(--blue-dark); color:#fff; }
+.smart-section .section-title { color:#fff; }
+.smart-section .section-lead { color:rgba(255,255,255,.65); }
+.smart-section .s-tag { background:rgba(255,255,255,.12); color:rgba(255,255,255,.85); }
+.smart-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:1.25rem; }
+.smart-card { background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); border-radius:4px; padding:1.5rem; transition:background .2s; }
+.smart-card:hover { background:rgba(255,255,255,.1); }
+.smart-icon { font-size:1.75rem; margin-bottom:.875rem; display:block; }
+.smart-title { font-weight:700; font-size:.9375rem; color:#fff; margin-bottom:.375rem; }
+.smart-desc { font-size:.8375rem; color:rgba(255,255,255,.55); line-height:1.65; }
+
+/* ── INSTALL ── */
+.install-section { background:var(--white); }
+.install-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1.5rem; }
+.install-step { text-align:center; }
+.install-circle { width:52px; height:52px; border-radius:50%; border:2px solid var(--blue); display:flex; align-items:center; justify-content:center; margin:0 auto 1rem; font-weight:800; font-size:1rem; color:var(--blue); }
+.install-title { font-weight:700; font-size:.9rem; color:var(--text); margin-bottom:.5rem; }
+.install-desc { font-size:.8125rem; color:var(--muted); line-height:1.65; }
+
+/* ── FAQ ── */
+.faq-section { background:var(--grey-bg); }
+.faq-list { display:flex; flex-direction:column; gap:0; border:1px solid var(--grey-line); border-radius:4px; overflow:hidden; }
+.faq-item { border-bottom:1px solid var(--grey-line); }
+.faq-item:last-child { border-bottom:none; }
+.faq-q { width:100%; text-align:left; background:var(--white); border:none; padding:1.125rem 1.5rem; font-family:'Open Sans',sans-serif; font-weight:600; font-size:.9375rem; color:var(--text); cursor:pointer; display:flex; justify-content:space-between; align-items:center; gap:1rem; transition:background .2s; }
+.faq-q:hover { background:var(--blue-light); }
+.faq-q .arrow { flex-shrink:0; font-size:.75rem; color:var(--blue); transition:transform .25s; }
+.faq-q.open { background:var(--blue-light); color:var(--blue); }
+.faq-q.open .arrow { transform:rotate(180deg); }
+.faq-a { display:none; padding:1rem 1.5rem 1.25rem; background:var(--blue-light); font-size:.875rem; color:var(--muted); line-height:1.75; }
+.faq-a.show { display:block; }
+
+/* ── REVIEWS ── */
+.reviews-section { background:var(--white); }
+.reviews-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; }
+.review-card { border:1px solid var(--grey-line); border-radius:4px; padding:1.75rem; }
+.review-stars { color:#F59E0B; font-size:.875rem; margin-bottom:.875rem; letter-spacing:.05em; }
+.review-text { font-size:.9rem; color:var(--text); line-height:1.75; margin-bottom:1rem; font-style:italic; }
+.review-author { font-size:.8rem; font-weight:700; color:var(--muted); }
+
+/* ── CTA BANNER ── */
+.cta-banner { background:var(--blue); padding:clamp(2.5rem,5vw,4rem) clamp(1rem,4vw,3rem); text-align:center; }
+.cta-banner h2 { font-family:'Merriweather',serif; font-size:clamp(1.5rem,3vw,2.25rem); color:#fff; margin-bottom:.875rem; font-weight:700; }
+.cta-banner p { font-size:1rem; color:rgba(255,255,255,.8); max-width:52ch; margin:0 auto 2rem; line-height:1.75; }
+.cta-actions { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; }
+
+/* ── FOOTER ── */
+footer { background:#0A1A2E; color:rgba(255,255,255,.5); font-size:.8125rem; }
+.footer-inner { max-width:1200px; margin:0 auto; padding:2.5rem clamp(1rem,4vw,3rem) 2rem; display:grid; grid-template-columns:2fr 1fr 1fr; gap:3rem; }
+.footer-brand { color:rgba(255,255,255,.8); font-size:.875rem; line-height:1.75; }
+.footer-logo { font-family:'Open Sans',sans-serif; font-weight:800; font-size:1.1rem; color:#fff; margin-bottom:1rem; display:flex; align-items:center; gap:.4rem; }
+.footer-col h4 { color:rgba(255,255,255,.8); font-weight:700; font-size:.875rem; margin-bottom:.875rem; }
+.footer-col a { display:block; color:rgba(255,255,255,.45); text-decoration:none; padding:.25rem 0; transition:color .2s; font-size:.8rem; }
+.footer-col a:hover { color:rgba(255,255,255,.85); }
+.footer-bottom { border-top:1px solid rgba(255,255,255,.08); padding:1.25rem clamp(1rem,4vw,3rem); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:.75rem; font-size:.75rem; color:rgba(255,255,255,.3); max-width:1200px; margin:0 auto; }
+.footer-bottom a { color:rgba(255,255,255,.35); text-decoration:none; }
+
+/* ═══════════════════════════════════════
+   CONFIGURATOR
+═══════════════════════════════════════ */
+.config-page { background:var(--grey-bg); min-height:calc(100vh - 66px); padding:3rem clamp(1rem,4vw,3rem) 5rem; }
+.config-header { text-align:center; margin-bottom:2.5rem; }
+.config-header h2 { margin-bottom:.75rem; }
+.config-header p { font-size:.9375rem; color:var(--muted); max-width:52ch; margin:0 auto; }
+.config-layout { display:grid; grid-template-columns:1fr 340px; gap:2rem; max-width:1100px; margin:0 auto; align-items:start; }
+
+/* Steps */
+.cstep { background:var(--white); border:1px solid var(--grey-line); border-radius:4px; overflow:hidden; margin-bottom:1.25rem; transition:border-color .2s; }
+.cstep.open { border-color:var(--blue); box-shadow:0 4px 16px rgba(0,86,166,.08); }
+.cstep-head { padding:1.1rem 1.5rem; display:flex; align-items:center; gap:.875rem; }
+.cstep-num { width:28px; height:28px; border-radius:50%; background:var(--blue); color:#fff; font-weight:700; font-size:.8rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.cstep-num.done { background:#22C55E; }
+.cstep-label { font-weight:700; font-size:.9375rem; color:var(--text); }
+.cstep-sub { font-size:.8rem; color:var(--muted); margin-top:.1rem; }
+.cstep-body { padding:0 1.5rem 1.5rem; }
+
+/* Dim inputs */
+.dim-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:.875rem; }
+.dim-field label { display:block; font-size:.8rem; font-weight:600; color:var(--muted); margin-bottom:.375rem; }
+.dim-field input { width:100%; padding:.6rem .875rem; border:1.5px solid var(--grey-line); border-radius:3px; font-size:.9375rem; font-family:'Open Sans',sans-serif; color:var(--text); background:var(--grey-bg); transition:border-color .2s; }
+.dim-field input:focus { outline:none; border-color:var(--blue); background:#fff; }
+.dim-hint { font-size:.74rem; color:var(--muted); margin-top:.25rem; }
+.dim-error { font-size:.74rem; color:var(--red); margin-top:.25rem; display:none; }
+
+/* Option grid */
+.opt-grid { display:grid; grid-template-columns:1fr 1fr; gap:.75rem; }
+.opt-grid.four { grid-template-columns:repeat(4,1fr); }
+.opt-btn { border:1.5px solid var(--grey-line); border-radius:3px; padding:.875rem 1rem; cursor:pointer; background:var(--grey-bg); text-align:left; transition:border-color .2s, background .2s; display:flex; flex-direction:column; gap:.2rem; }
+.opt-btn:hover { border-color:var(--blue); }
+.opt-btn.sel { border-color:var(--blue); background:var(--blue-light); }
+.opt-emoji { font-size:1.2rem; margin-bottom:.2rem; }
+.opt-name { font-weight:700; font-size:.875rem; color:var(--text); }
+.opt-sub { font-size:.74rem; color:var(--muted); line-height:1.4; }
+.opt-price { font-size:.74rem; font-weight:700; color:var(--blue); margin-top:.25rem; }
+
+/* Toggle list */
+.tog-list { display:flex; flex-direction:column; gap:.625rem; }
+.tog { display:flex; align-items:center; justify-content:space-between; padding:.875rem 1rem; border:1.5px solid var(--grey-line); border-radius:3px; background:var(--grey-bg); cursor:pointer; transition:border-color .2s, background .2s; gap:1rem; }
+.tog:hover { border-color:var(--blue); }
+.tog.sel { border-color:var(--blue); background:var(--blue-light); }
+.tog-left { display:flex; flex-direction:column; gap:.15rem; }
+.tog-name { font-weight:600; font-size:.875rem; color:var(--text); }
+.tog-desc { font-size:.74rem; color:var(--muted); }
+.tog-right { display:flex; flex-direction:column; align-items:flex-end; gap:.25rem; flex-shrink:0; }
+.tog-price { font-size:.8rem; font-weight:700; color:var(--blue); }
+.tog-check { width:18px; height:18px; border:2px solid var(--grey-line); border-radius:3px; display:flex; align-items:center; justify-content:center; font-size:.7rem; color:transparent; transition:all .15s; }
+.tog.sel .tog-check { background:var(--blue); border-color:var(--blue); color:#fff; }
+
+/* Qty */
+.qty-wrap { display:flex; align-items:center; gap:1rem; margin-bottom:.625rem; }
+.qty-btn { width:34px; height:34px; border:1.5px solid var(--grey-line); border-radius:3px; background:#fff; cursor:pointer; font-size:1.25rem; display:flex; align-items:center; justify-content:center; font-weight:700; color:var(--text); transition:border-color .2s; }
+.qty-btn:hover { border-color:var(--blue); }
+.qty-num { font-family:'Merriweather',serif; font-size:1.75rem; font-weight:700; color:var(--text); min-width:2ch; text-align:center; }
+.qty-note { font-size:.8rem; color:var(--muted); }
+.qty-note strong { color:var(--blue); }
+
+/* Price panel */
+.price-panel { background:var(--blue-dark); border-radius:4px; padding:1.75rem; position:sticky; top:82px; border:1px solid rgba(255,255,255,.08); box-shadow:0 8px 32px rgba(0,0,0,.25); }
+.pp-title { font-size:.7rem; font-weight:700; letter-spacing:.08em; color:rgba(255,255,255,.55); text-transform:uppercase; margin-bottom:1.25rem; }
+.pp-lines { display:flex; flex-direction:column; gap:.5rem; margin-bottom:1.25rem; }
+.pp-line { display:flex; justify-content:space-between; font-size:.8125rem; }
+.pp-lbl { color:rgba(255,255,255,.5); }
+.pp-val { color:#fff; font-weight:700; }
+.pp-val.green { color:#4ADE80; }
+.pp-div { height:1px; background:rgba(255,255,255,.1); margin:1rem 0; }
+.pp-tot-row { display:flex; justify-content:space-between; align-items:baseline; }
+.pp-tot-label { font-size:.875rem; color:rgba(255,255,255,.65); }
+.pp-tot { font-family:'Merriweather',serif; font-size:2rem; color:#fff; font-weight:700; }
+.pp-vat { font-size:.7rem; color:rgba(255,255,255,.3); margin-top:.25rem; text-align:right; }
+.pp-delivery { background:rgba(74,222,128,.1); border:1px solid rgba(74,222,128,.2); border-radius:3px; padding:.75rem 1rem; margin-top:1rem; font-size:.8rem; color:rgba(255,255,255,.65); }
+.pp-sum { margin-top:1.25rem; display:flex; flex-direction:column; gap:.35rem; }
+.pp-sum-row { font-size:.75rem; color:rgba(255,255,255,.4); display:flex; align-items:center; gap:.4rem; }
+.pp-sum-row span:first-child { color:#4ADE80; }
+.order-btn { width:100%; margin-top:1.5rem; background:var(--red); color:#fff; font-family:'Open Sans',sans-serif; font-weight:700; font-size:.9375rem; padding:.875rem; border:none; border-radius:3px; cursor:pointer; letter-spacing:.01em; transition:background .2s; }
+.order-btn:hover { background:var(--red-dark); }
+.order-btn:disabled { background:rgba(255,255,255,.12); color:rgba(255,255,255,.3); cursor:not-allowed; }
+.pp-note { font-size:.72rem; color:rgba(255,255,255,.3); text-align:center; margin-top:.75rem; line-height:1.5; }
+
+/* Modal */
+.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:500; display:none; align-items:center; justify-content:center; padding:1.5rem; }
+.modal-overlay.open { display:flex; }
+.modal { background:#fff; border-radius:4px; padding:2.5rem; max-width:460px; width:100%; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,.2); }
+.modal-icon { font-size:3rem; margin-bottom:1rem; }
+.modal h3 { font-family:'Merriweather',serif; font-weight:700; font-size:1.5rem; color:var(--text); margin-bottom:.75rem; }
+.modal p { font-size:.9375rem; color:var(--muted); line-height:1.75; margin-bottom:1.75rem; }
+.modal-close { background:var(--blue); color:#fff; border:none; border-radius:3px; padding:.75rem 2rem; font-family:'Open Sans',sans-serif; font-weight:700; font-size:.9375rem; cursor:pointer; }
+.modal-close:hover { background:var(--blue-dark); }
+
+/* Responsive */
+@media(max-width:960px){
+  .hero-inner { grid-template-columns:1fr; }
+  .hiw-grid { grid-template-columns:1fr 1fr; }
+  .feat-grid { grid-template-columns:1fr 1fr; }
+  .video-grid { grid-template-columns:1fr; }
+  .smart-grid { grid-template-columns:1fr; }
+  .install-grid { grid-template-columns:1fr 1fr; }
+  .reviews-grid { grid-template-columns:1fr; }
+  .config-layout { grid-template-columns:1fr; }
+  .price-panel { position:static; }
+  .footer-inner { grid-template-columns:1fr; gap:2rem; }
+  nav .nav-links li:not(:last-child):not(:nth-last-child(2)) { display:none; }
+}
+@media(max-width:600px){
+  .hiw-grid { grid-template-columns:1fr; }
+  .feat-grid { grid-template-columns:1fr; }
+  .sizes-grid { grid-template-columns:1fr; }
+  .install-grid { grid-template-columns:1fr; }
+  .opt-grid.four { grid-template-columns:1fr 1fr; }
+}
+@media(prefers-reduced-motion:reduce){ *,*::before,*::after { transition:none!important; animation:none!important; } }
+</style>
+<script type='text/javascript' nonce='pMQ2YpnPKp88POPOmTj6pQ==' src='https://a506ce6e-04b8-4d49-810a-6610a9870d80.frame.claudeusercontent.com/2iZQKAPeJCSSv7exMD9nMNPDceLgfkahiGhgbu4z7J7D16zUKBn1XvUqoHVmROkBnn-pgf3yUMss9TIEspglSIxdYaw0EHoGojv1pSX0sOkRrXG5jXYQboWRdKsC1KGJuvAlx1M_DqW7_Dad4sq38vRCgugBs14iuhuLBV8yNiTHW5ZncFu3mKSEY9tmclbOiyWVoYhPjpTBshARB5gpZXTKaD8VNFa7PRAdwHLc-MOzDqZKQ8fFWB-SKfDCqkjmNgdLBuSA5NwuviIPaQrHCzawsG1MQ8Ghr9MEdbp5b61yNbFlzh7NqH5jKGwRt4J536-SHNpcgNwTAUkABzhSE1O1hm8XxCHhEAEn4_m8qsrjAOfT-oOYsCCRm0u-DWSRNej4iH5ZKqTWNf2pqm-AOPNCIvtwPrP1t_1QH7ROECKzd-nYwhokUIQ_mG9ArME5XcLVqIoLormJ8Xu_02B2U3CfSmpMWfVNTtAqGaPMewrcERSOFdfXQBOW09c_bArO8A6KtJ1uKp52rckcrSWyVToGeJ5wNpWowzzgpNlYf4oIo4pXzCH6RFQ6CJ12GjH79cI7XEDGFKHqucMUjEBNe5DtPupbsk1DS5oK0R78DI5sKmhmdySCBxo9Q3lTukAGJHrYTXblcf1DOnHil4ql_B6AMMLTbiy_ZsqhiGCIsmWicNJ8mC5bpyLL6rllRPjjamsJ1tv0q-FcxWrFqz0_iw'></script></head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="#" onclick="showPage(&#39;home&#39;);return false;">
+      <span class="shield">🛡</span> FloodShield Pro
+    </a>
+    <ul class="nav-links">
+      <li><a href="#" onclick="showPage(&#39;home&#39;);goTo(&#39;how&#39;);return false;">How it works</a></li>
+      <li><a href="#" onclick="showPage(&#39;home&#39;);goTo(&#39;infographic&#39;);return false;">System</a></li>
+      <li><a href="#" onclick="showPage(&#39;home&#39;);goTo(&#39;video-sec&#39;);return false;">Video</a></li>
+      <li><a href="#" onclick="showPage(&#39;home&#39;);goTo(&#39;faq&#39;);return false;">FAQ</a></li>
+      <li><a href="#" onclick="showPage(&#39;configurator&#39;);return false;" class="nav-cta-btn">Configure &amp; Price</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ════════════════ HOME ════════════════ -->
+<div id="page-home" class="page active">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-badge"><span class="dot"></span> Automatic flood protection for basement windows</div>
+      <h1>Your basement stays dry.<br><strong>Even when the river doesn't.</strong></h1>
+      <p class="hero-sub">FloodShield Pro seals your basement window fully automatically the moment water levels rise — pneumatically, reliably, without any manual action.</p>
+      <div class="hero-actions">
+        <a href="#" class="btn-red" onclick="showPage(&#39;configurator&#39;);return false;">Configure &amp; get price</a>
+        <a href="#" class="btn-white-outline" onclick="goTo(&#39;how&#39;);return false;">How it works ↓</a>
+      </div>
+      <div class="hero-checklist">
+        <div class="hero-check">Fits windows 60–120 cm wide · 90–180 cm tall</div>
+        <div class="hero-check">Activates in under 2 minutes — fully automatic</div>
+        <div class="hero-check">Smart Home ready · retrofittable · made in Europe</div>
+      </div>
+    </div>
+   <div class="hero-visual">
+
+    <img src="Basementwindows.png"
+         alt="FloodShield Basement Windows"
+         style="
+            width:100%;
+            max-width:700px;
+            height:auto;
+            display:block;
+            margin:0 auto;
+            border-radius:12px;
+            box-shadow:0 8px 32px rgba(0,0,0,0.20);
+         ">
+
+</div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="section-wrap hiw-section">
+    <div class="s-tag">Step by step</div>
+    <h2 class="section-title">From detection to sealed — in under two minutes</h2>
+    <p class="section-lead">The system monitors water levels around the clock and responds automatically — no buttons, no manual action required.</p>
+    <div class="hiw-grid">
+      <div class="hiw-step">
+        <div class="hiw-num">01</div>
+        <span class="hiw-icon">💧</span>
+        <div class="hiw-title">Water detected</div>
+        <p class="hiw-desc">The integrated sensor detects rising water and sends an instant signal — including during power outages via battery backup.</p>
+      </div>
+      <div class="hiw-step">
+        <div class="hiw-num">02</div>
+        <span class="hiw-icon">⚙️</span>
+        <div class="hiw-title">Pump activates</div>
+        <p class="hiw-desc">The side-mounted pump builds air pressure. Its weather-sealed housing is compact and virtually maintenance-free.</p>
+      </div>
+      <div class="hiw-step">
+        <div class="hiw-num">03</div>
+        <span class="hiw-icon">⬆️</span>
+        <div class="hiw-title">Barrier rises</div>
+        <p class="hiw-desc">The inflatable barrier travels up corrosion-resistant guide rails from bottom to top, covering the entire window opening.</p>
+      </div>
+      <div class="hiw-step">
+        <div class="hiw-num">04</div>
+        <span class="hiw-icon">🔒</span>
+        <div class="hiw-title">Window fully sealed</div>
+        <p class="hiw-desc">Fully inflated, the barrier forms a watertight wall. Once the flood passes, it deflates and resets automatically.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="blue-divider">
+
+<!-- INFOGRAPHIC -->
+<section id="infographic">
+  <div class="section-wrap infographic-section">
+    <div class="s-tag">System overview</div>
+    <h2 class="section-title">Front view &amp; cross-section — how the system is built</h2>
+    <p class="section-lead">The infographic shows the window in normal operation (deflated) and during active flood protection (inflated), with all key components labelled.</p>
+    <div class="infographic-wrap">
+      <div class="infographic-header">
+        <h3>FloodShield Pro — Technical Cross-Section</h3>
+        <span class="infographic-sub">Deflated (left) · Inflated (right)</span>
+      </div>
+      <img src="Floodbarrier.png"
+     alt="FloodShield Pro Technical Cross Section"
+     style="
+        display:block;
+        margin:20px auto;
+        width:100%;
+        max-width:1000px;
+        height:auto;
+     ">
+  </div>
+</section>
+
+<hr class="blue-divider">
+
+<!-- VIDEO -->
+<section id="video-sec">
+  <div class="section-wrap video-section">
+    <div class="s-tag">See it in action</div>
+    <h2 class="section-title">Watch FloodShield Pro deploy</h2>
+    <p class="section-lead">The video demonstrates the automatic inflation process — from sensor trigger to fully sealed window.</p>
+    <div class="video-grid">
+      <div class="video-box" onclick="this.querySelector(&#39;.vp-overlay&#39;).style.display=&#39;none&#39;;this.querySelector(&#39;video&#39;).play();" style="cursor:pointer;">
+        <video id="mainvid" controls="" preload="metadata" style="display:block;width:100%;background:#000;">
+          <source src="protectionwindow.mp4" type="video/mp4">
+        </video>
+        <div class="vp-overlay" style="position:absolute;inset:0;background:linear-gradient(135deg,#0A2240,#0068C8);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.875rem;color:#fff;">
+          <div class="play-btn-big"><svg viewbox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+          <div class="video-label">FloodShield Pro — Deployment Demo</div>
+          <div class="video-sub">AI-generated product animation</div>
+        </div>
+      </div>
+      <div class="video-content">
+        <h3>Fully automatic in under 2 minutes</h3>
+        <p>The video shows the complete deployment sequence: from water sensor trigger, through pneumatic pump activation, to the barrier fully sealing the window opening.</p>
+        <p>After the flood event, the system deflates automatically and resets to standby — ready for the next activation.</p>
+        <div class="video-checklist">
+          <div class="vc-item"><span class="vc-icon">✓</span><span>Sensor detects rising water automatically</span></div>
+          <div class="vc-item"><span class="vc-icon">✓</span><span>Pump activates within seconds</span></div>
+          <div class="vc-item"><span class="vc-icon">✓</span><span>Barrier rises smoothly along guide rails</span></div>
+          <div class="vc-item"><span class="vc-icon">✓</span><span>Full seal in under 2 minutes</span></div>
+          <div class="vc-item"><span class="vc-icon">✓</span><span>Automatic deflation after flood recedes</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="blue-divider">
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-wrap features-section">
+    <div class="s-tag">Technical features</div>
+    <h2 class="section-title">Engineered for long-term reliability</h2>
+    <p class="section-lead">Every component is selected for durability under continuous wet and corrosive conditions.</p>
+    <div class="feat-grid">
+      <div class="feat-card"><span class="feat-icon">🛡</span><div class="feat-title">Corrosion-resistant guide rails</div><p class="feat-desc">Treated aluminium profiles — permanently tight even in salt water and debris-heavy runoff.</p></div>
+      <div class="feat-card"><span class="feat-icon">🌬</span><div class="feat-title">Pneumatic lifting mechanism</div><p class="feat-desc">Air pressure drives the barrier — no electric motor in the wet zone. More robust and lower maintenance than hydraulic systems.</p></div>
+      <div class="feat-card"><span class="feat-icon">📡</span><div class="feat-title">Wi-Fi water level sensor</div><p class="feat-desc">Connects to your smart home, sends push alerts, and can trigger third-party alarms before water reaches your window.</p></div>
+      <div class="feat-card"><span class="feat-icon">🔧</span><div class="feat-title">Retrofit — no structural changes</div><p class="feat-desc">Mounts to the exterior wall without modifying the window frame or masonry seal.</p></div>
+    </div>
+  </div>
+</section>
+
+<hr class="blue-divider">
+
+<!-- SIZES -->
+<section id="sizes">
+  <div class="section-wrap sizes-section">
+    <div class="s-tag">Size guide</div>
+    <h2 class="section-title">Made to fit your window</h2>
+    <p class="section-lead">Three standard classes cover most homes. Custom sizes available on request.</p>
+    <div class="sizes-grid">
+      <div class="size-card">
+        <div class="size-card-header"><div class="size-label">Compact</div><div class="size-name">Compact</div><div class="size-dims">60 – 80 cm × 90 – 120 cm</div></div>
+        <div class="size-card-body"><div class="size-visual"><div class="size-bar" style="height:50%"></div><div class="size-bar" style="height:62%"></div><div class="size-bar" style="height:56%"></div></div><p class="size-desc">Ideal for narrow basement windows and window wells with limited side clearance.</p></div>
+      </div>
+      <div class="size-card">
+        <div class="size-card-header"><div class="size-label">Most popular</div><div class="size-name">Standard</div><div class="size-dims">80 – 100 cm × 110 – 150 cm</div></div>
+        <div class="size-card-body"><div class="size-visual"><div class="size-bar" style="height:68%"></div><div class="size-bar" style="height:80%"></div><div class="size-bar" style="height:74%"></div></div><p class="size-desc">Fits the vast majority of single-family and multi-family homes across Central Europe.</p></div>
+      </div>
+      <div class="size-card">
+        <div class="size-card-header"><div class="size-label">XL</div><div class="size-name">XL</div><div class="size-dims">100 – 120 cm × 140 – 180 cm</div></div>
+        <div class="size-card-body"><div class="size-visual"><div class="size-bar" style="height:84%"></div><div class="size-bar" style="height:100%"></div><div class="size-bar" style="height:92%"></div></div><p class="size-desc">Maximum coverage for large windows and commercial properties, up to 180 cm tall.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="blue-divider">
+
+<!-- SMART HOME -->
+<section id="smart">
+  <div class="section-wrap smart-section">
+    <div class="s-tag">Smart Home</div>
+    <h2 class="section-title">An alert on your phone before the water arrives.</h2>
+    <p class="section-lead">The sensor links to your home network for automatic or remote-controlled activation — so you're always in the loop, wherever you are.</p>
+    <div class="smart-grid">
+      <div class="smart-card"><span class="smart-icon">⚡</span><div class="smart-title">Automatic deployment</div><p class="smart-desc">Once the sensor exceeds the threshold you set, the barrier deploys on its own. No button to press.</p></div>
+      <div class="smart-card"><span class="smart-icon">📲</span><div class="smart-title">Instant push alerts</div><p class="smart-desc">Real-time notifications on iOS and Android the moment water is detected or the barrier activates.</p></div>
+      <div class="smart-card"><span class="smart-icon">🌍</span><div class="smart-title">Remote control</div><p class="smart-desc">Deploy or retract the barrier via app — on holiday just as easily as from your sofa.</p></div>
+      <div class="smart-card"><span class="smart-icon">🔗</span><div class="smart-title">Wide compatibility</div><p class="smart-desc">Works with Home Assistant, Apple HomeKit, Google Home, and KNX-based building systems.</p></div>
+    </div>
+  </div>
+</section>
+
+<hr class="blue-divider">
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="section-wrap faq-section">
+    <div class="s-tag">Frequently asked questions</div>
+    <h2 class="section-title">Everything you need to know</h2>
+    <p class="section-lead">Can't find your answer here? Contact us directly — we respond within 24 hours.</p>
+    <div class="faq-list">
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Does FloodShield Pro work during a power outage? <span class="arrow">▼</span></button><div class="faq-a">Yes. The integrated 72-hour battery backup keeps the sensor, pump, and controller fully operational during power outages. An extended 7-day battery pack is also available as an add-on.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Will it damage my window frame or exterior wall? <span class="arrow">▼</span></button><div class="faq-a">No. The guide rails are anchored into the exterior wall on both sides of the window. The window frame itself and the masonry seal are not touched at any point during installation.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">How does it look when not deployed? <span class="arrow">▼</span></button><div class="faq-a">When deflated, the barrier folds flat into the lower channel beneath the window and is barely visible. The guide rails sit flush to the wall and are available in several finishes (natural aluminium, anthracite, white, custom RAL) to match your exterior.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">What happens after the flood? Does it reset automatically? <span class="arrow">▼</span></button><div class="faq-a">Yes. Once the sensor detects that water levels have receded below the set threshold, the system deflates the barrier automatically. No manual reset is needed. You can also trigger deflation remotely via the app.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">How large a window can it protect? <span class="arrow">▼</span></button><div class="faq-a">Standard sizes range from 60–120 cm wide and 90–180 cm tall. Custom dimensions outside these ranges are available on request — contact us with your window measurements for a tailored quote.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">What is the delivery and lead time? <span class="arrow">▼</span></button><div class="faq-a">Free delivery to Austria, Germany, and Switzerland. From quote confirmation to delivery, the lead time is typically 3–4 weeks. Rush orders may be possible — contact us to check availability.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Is there a warranty? <span class="arrow">▼</span></button><div class="faq-a">All units come with a standard 2-year warranty on parts and workmanship. An optional 5-year extended warranty covering both parts and labour is available as an add-on in the configurator.</div></div>
+    </div>
+  </div>
+</section>
+
+<hr class="blue-divider">
+
+<!-- REVIEWS -->
+<section>
+  <div class="section-wrap reviews-section">
+    <div class="s-tag">Customer reviews</div>
+    <h2 class="section-title">Proven on the very first flood</h2>
+    <p class="section-lead">What homeowners report after the system deployed for the first time.</p>
+    <div class="reviews-grid">
+      <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"During the heavy rain in July, the system was fully sealed three minutes after triggering. Our boiler room stayed dry while the neighbours were pumping all night."</p><div class="review-author">M. Grabner · Vienna, single-family home built 1968</div></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"Installation was less invasive than we feared. The guide rails are barely visible when retracted — and the push notification came before I even heard the rain."</p><div class="review-author">S. &amp; K. Holzner · Munich, terraced house with basement office</div></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"As a property manager I now have it in four buildings. The installation is straightforward, and the insurance discount on natural hazard coverage pays for itself quickly."</p><div class="review-author">T. Brandl · Brandl Property Management, Passau</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<div class="cta-banner">
+  <h2>Protect your basement before the next flood.</h2>
+  <p>Use the configurator to build your system and get an instant price — no obligation, response within 24 hours.</p>
+  <div class="cta-actions">
+    <a href="#" class="btn-red" style="font-size:1rem;padding:.9rem 2.5rem;" onclick="showPage(&#39;configurator&#39;);return false;">Configure &amp; get price now</a>
+    <a href="mailto:info@floodshieldpro.com" class="btn-white-outline" style="font-size:1rem;padding:.9rem 2.5rem;">Contact us directly</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">🛡 FloodShield Pro</div>
+      <div class="footer-brand">Automatic flood protection for basement windows.<br>Engineered and made in Europe.<br><br>
+    <div class="footer-col">
+      <h4>Product</h4>
+      <a href="#" onclick="showPage(&#39;home&#39;);goTo(&#39;how&#39;);return false;">How it works</a>
+      <a href="#" onclick="showPage(&#39;home&#39;);goTo(&#39;features&#39;);return false;">Features</a>
+      <a href="#" onclick="showPage(&#39;home&#39;);goTo(&#39;sizes&#39;);return false;">Size guide</a>
+      <a href="#" onclick="showPage(&#39;home&#39;);goTo(&#39;smart&#39;);return false;">Smart Home</a>
+      <a href="#" onclick="showPage(&#39;home&#39;);goTo(&#39;faq&#39;);return false;">FAQ</a>
+    </div>
+    <div class="footer-col">
+      <h4>Order</h4>
+      <a href="#" onclick="showPage(&#39;configurator&#39;);return false;">Configurator</a>
+      
+      <a href="mailto:info@floodshieldpro.com">Contact</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Legal Notice</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 FloodShield Pro — All rights reserved</span>
+    <span><a href="#">Privacy</a> · <a href="#">Legal</a> · <a href="#">Terms</a></span>
+  </div>
+</footer>
+</div><!-- /page-home -->
+
+<!-- ════════════════ CONFIGURATOR ════════════════ -->
+<div id="page-configurator" class="page">
+<div class="config-page">
+  <div class="config-header">
+    <div class="s-tag">Product configurator</div>
+    <h2 class="section-title">Build your FloodShield Pro</h2>
+    <p>Choose your options below and watch the price update in real time. Takes about two minutes.</p>
+  </div>
+  <div class="config-layout">
+    <div>
+      <!-- 1 -->
+      <div class="cstep open" id="cs1">
+        <div class="cstep-head"><div class="cstep-num" id="cn1">1</div><div><div class="cstep-label">Window Dimensions</div><div class="cstep-sub" id="sub1">Enter your window width and height</div></div></div>
+        <div class="cstep-body">
+          <div class="dim-row">
+            <div class="dim-field"><label>Width (cm)</label><input type="number" id="iw" min="60" max="120" placeholder="e.g. 90" oninput="upd()"><div class="dim-hint">60 – 120 cm</div><div class="dim-error" id="ew">Must be 60–120 cm</div></div>
+            <div class="dim-field"><label>Height (cm)</label><input type="number" id="ih" min="90" max="180" placeholder="e.g. 130" oninput="upd()"><div class="dim-hint">90 – 180 cm</div><div class="dim-error" id="eh">Must be 90–180 cm</div></div>
+          </div>
+          <p style="font-size:.8rem;color:var(--muted);">Not sure? Measure the outer frame edge to edge. When between sizes, always round up.</p>
+        </div>
+      </div>
+      <!-- 3 -->
+      <div class="cstep" id="cs3">
+        <div class="cstep-head"><div class="cstep-num" id="cn3">2</div><div><div class="cstep-label">Guide Rail Finish</div><div class="cstep-sub" id="sub3">Match your exterior</div></div></div>
+        <div class="cstep-body">
+          <div class="opt-grid" style="grid-template-columns:1fr;">
+            <button class="opt-btn sel" id="rb-olv" style="cursor:default;">
+              <span class="opt-emoji">🟢</span>
+              <span class="opt-name">Olive Green</span>
+              <span class="opt-sub">The original FloodShield green — as shown in the product images</span>
+              <span class="opt-price">Included</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- 5 -->
+      <div class="cstep" id="cs5">
+        <div class="cstep-head"><div class="cstep-num" id="cn5">3</div><div><div class="cstep-label">Number of Windows</div><div class="cstep-sub" id="sub5">How many units?</div></div></div>
+        <div class="cstep-body">
+          <div class="qty-wrap">
+            <button class="qty-btn" onclick="chQ(-1)">−</button>
+            <div class="qty-num" id="qn">1</div>
+            <button class="qty-btn" onclick="chQ(1)">+</button>
+          </div>
+          <p class="qty-note">Orders of <strong>3+ units receive a 10% volume discount</strong> automatically.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRICE PANEL -->
+    <div class="price-panel">
+      <div class="pp-title">Your configuration</div>
+      <div class="pp-lines">
+        <div class="pp-line"><span class="pp-lbl">Base unit</span><span class="pp-val" id="pl-base">—</span></div>
+        <div class="pp-line" id="pl-rail" style="display:none" hidden=""><span class="pp-lbl">Rail finish</span><span class="pp-val" id="pl-rail-v"></span></div>
+        <div class="pp-line" id="pl-qty" style="display:none"><span class="pp-lbl">Quantity</span><span class="pp-val" id="pl-qty-v"></span></div>
+        <div class="pp-line" id="pl-disc" style="display:none"><span class="pp-lbl">Volume discount (10%)</span><span class="pp-val green" id="pl-disc-v"></span></div>
+      </div>
+      <div class="pp-div"></div>
+      <div class="pp-tot-row"><span class="pp-tot-label">Total (excl. VAT)</span><span class="pp-tot" id="pp-tot">—</span></div>
+      <div class="pp-vat" id="pp-vat">Enter dimensions to see your price</div>
+      <div class="pp-delivery">🚚 Free delivery · AT, DE, CH · Lead time 3–4 weeks</div>
+      <div class="pp-sum" id="pp-sum"></div>
+      <button class="order-btn" id="obtn" disabled="" onclick="doOrder()">Enter dimensions to continue</button>
+      <div class="pp-note">Configure your system and click Buy now to proceed</div>
+    </div>
+  </div>
+</div>
+</div><!-- /configurator -->
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-icon">🎓</div>
+    <h3>Thank you for your interest!</h3>
+    <p style="margin-bottom:1rem;">This website is part of a <strong>university project</strong> at MCI Management Center Innsbruck and is therefore <strong>not available for purchase</strong>.</p>
+    <p style="margin-bottom:1.75rem;font-size:.875rem;">We truly appreciate you taking the time to explore our concept and configure a system. Your engagement means a lot to us — thank you for participating! 🙏</p>
+    <div style="background:#EBF4FF;border-radius:4px;padding:.875rem 1rem;margin-bottom:1.75rem;font-size:.8125rem;color:#0056A6;text-align:left;line-height:1.6;">
+      <strong>IDP Project · FloodShield Pro</strong><br>
+      MCI Management Center Innsbruck<br>
+      Inflatable Flood Protection System for Basement Windows
+    </div>
+    <button class="modal-close" onclick="closeModal()">Close</button>
+  </div>
+</div>
+
+<script>
+// ── NAV ──
+function showPage(id){ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById('page-'+id).classList.add('active'); window.scrollTo(0,0); }
+function goTo(id){ setTimeout(()=>{ const e=document.getElementById(id); if(e)e.scrollIntoView({behavior:'smooth'}); },100); }
+
+// ── REVEAL SLIDER ──
+(function(){
+  const wrap=document.getElementById('revealWrap');
+  const after=document.getElementById('revAfter');
+  const div=document.getElementById('revDiv');
+  const handle=document.getElementById('revHandle');
+  const hint=document.getElementById('revHint');
+  let drag=false,hinted=false;
+  function set(pct){ pct=Math.max(5,Math.min(95,pct)); after.style.clipPath=`inset(0 ${100-pct}% 0 0)`; div.style.left=pct+'%'; handle.style.left=pct+'%'; }
+  function pct(e){ const r=wrap.getBoundingClientRect(); return ((e.touches?e.touches[0].clientX:e.clientX)-r.left)/r.width*100; }
+  set(50);
+  handle.addEventListener('mousedown',e=>{ drag=true; e.preventDefault(); if(!hinted){hint.style.opacity='0';hinted=true;} });
+  handle.addEventListener('touchstart',e=>{ drag=true; if(!hinted){hint.style.opacity='0';hinted=true;} },{passive:true});
+  document.addEventListener('mousemove',e=>{ if(drag)set(pct(e)); });
+  document.addEventListener('touchmove',e=>{ if(drag)set(pct(e)); },{passive:true});
+  document.addEventListener('mouseup',()=>drag=false);
+  document.addEventListener('touchend',()=>drag=false);
+  wrap.addEventListener('click',e=>{ set(pct(e)); if(!hinted){hint.style.opacity='0';hinted=true;} });
+})();
+
+// ── FAQ ──
+function toggleFaq(btn){ const a=btn.nextElementSibling; const open=btn.classList.contains('open'); document.querySelectorAll('.faq-q.open').forEach(b=>{ b.classList.remove('open'); b.nextElementSibling.classList.remove('show'); }); if(!open){ btn.classList.add('open'); a.classList.add('show'); } }
+
+// ── CONFIGURATOR ──
+const S={ w:null,h:null,mat:'std',rail:'sil',railX:0,railLbl:'Natural Aluminium',addons:{sensor:true,battery:false,alarm:false,cover:false,install:false,warranty:false},qty:1 };
+const BASE={ compact:{mw:80,mh:120,p:890},standard:{mw:100,mh:150,p:1090},xl:{mw:120,mh:180,p:1390} };
+const AP={ sensor:149,battery:99,alarm:79,cover:49,install:290,warranty:199 };
+const SN={ sensor:'Wi-Fi sensor',battery:'Ext. battery',alarm:'Siren',cover:'UV cover',install:'Installation',warranty:'5-yr warranty' };
+function getSz(w,h){ if(w<=80&&h<=120)return'compact'; if(w<=100&&h<=150)return'standard'; return'xl'; }
+function fmt(n){ return'€'+n.toLocaleString('de-DE'); }
+function upd(){
+  const wv=parseFloat(document.getElementById('iw').value), hv=parseFloat(document.getElementById('ih').value);
+  const we=document.getElementById('ew'),he=document.getElementById('eh');
+  if(document.getElementById('iw').value&&(isNaN(wv)||wv<60||wv>120)){we.style.display='block';}else we.style.display='none';
+  if(document.getElementById('ih').value&&(isNaN(hv)||hv<90||hv>180)){he.style.display='block';}else he.style.display='none';
+  S.w=(!isNaN(wv)&&wv>=60&&wv<=120)?wv:null; S.h=(!isNaN(hv)&&hv>=90&&hv<=180)?hv:null;
+  if(S.w&&S.h)document.getElementById('sub1').textContent=S.w+' cm × '+S.h+' cm';
+  render();
+}
+function selMat(m){ S.mat=m; ['std','pro'].forEach(k=>document.getElementById('mb-'+k).classList.toggle('sel',k===m)); document.getElementById('sub2').textContent=m==='pro'?'Pro TPU selected':'Standard PVC selected'; render(); }
+function selRail(k,lbl,x){ S.rail=k;S.railX=x;S.railLbl=lbl; ['sil','ant','whi','cus'].forEach(r=>document.getElementById('rb-'+r).classList.toggle('sel',r===k)); document.getElementById('sub3').textContent=lbl; render(); }
+function togA(a,p){ S.addons[a]=!S.addons[a]; const el=document.getElementById('ta-'+a); el.classList.toggle('sel',S.addons[a]); el.querySelector('.tog-check').textContent=S.addons[a]?'✓':''; render(); }
+function chQ(d){ S.qty=Math.max(1,Math.min(20,S.qty+d)); document.getElementById('qn').textContent=S.qty; document.getElementById('sub5').textContent=S.qty+(S.qty===1?' unit':' units'); render(); }
+function render(){
+  const btn=document.getElementById('obtn');
+  if(!S.w||!S.h){
+    document.getElementById('pp-tot').textContent='--';
+    document.getElementById('pp-vat').textContent='Enter dimensions to see your price';
+    document.getElementById('pl-base').textContent='--';
+    btn.disabled=true; btn.textContent='Enter dimensions to continue'; return;
+  }
+  const sz=getSz(S.w,S.h), base=BASE[sz].p;
+  let total=base*S.qty;
+  const disc=S.qty>=3?Math.round(total*0.1):0;
+  total-=disc;
+  document.getElementById('pl-base').textContent=fmt(base);
+  var qtyRow=document.getElementById('pl-qty');
+  var qtyVal=document.getElementById('pl-qty-v');
+  if(S.qty>1){ qtyRow.style.display=''; qtyVal.textContent='x '+S.qty+' = '+fmt(base*S.qty); }
+  else { qtyRow.style.display='none'; }
+  var discRow=document.getElementById('pl-disc');
+  var discVal=document.getElementById('pl-disc-v');
+  if(disc>0){ discRow.style.display=''; discVal.textContent='- '+fmt(disc); }
+  else { discRow.style.display='none'; }
+  document.getElementById('pp-tot').textContent=fmt(total);
+  document.getElementById('pp-vat').textContent='Excl. VAT - Est. '+fmt(Math.round(total*1.2))+' incl. 20% VAT';
+  var szL={compact:'Compact',standard:'Standard',xl:'XL'};
+  var lines=[['o',S.w+' x '+S.h+' cm ('+szL[sz]+')'],['o','Standard PVC'],['o','Olive Green'],['o',S.qty+(S.qty===1?' unit':' units')]];
+  document.getElementById('pp-sum').innerHTML=lines.map(function(r){ return '<div class="pp-sum-row"><span>'+r[0]+'</span><span>'+r[1]+'</span></div>'; }).join('');
+  btn.disabled=false; btn.textContent='Buy now -- '+fmt(total);
+}
+
+function doOrder(){ document.getElementById('modal').classList.add('open'); }
+function closeModal(){ document.getElementById('modal').classList.remove('open'); showPage('home'); }
+</script>
+</body>
+</html>
